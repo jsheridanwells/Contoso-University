@@ -24,7 +24,7 @@ namespace Contoso
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<SchoolContext>(opt => {
-                opt.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
+                opt.UseSqlite(Configuration.GetConnectionString("DefaultConnection"));
             });
             services.AddMvc();
         }
