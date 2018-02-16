@@ -32,6 +32,7 @@ namespace Contoso
                     logger.LogError(error, "Hubo un error mientras semillar el Database");
                 }
             }
+            host.Run();
         }
 
         public static IWebHost BuildWebHost(string[] args) =>
