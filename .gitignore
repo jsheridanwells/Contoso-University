@@ -2,6 +2,7 @@
 .vscode/
 bin/
 obj/
+*.db
 
 # Created by https://www.gitignore.io/api/aspnetcore
 
