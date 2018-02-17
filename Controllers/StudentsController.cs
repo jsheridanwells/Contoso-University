@@ -108,5 +108,53 @@ namespace Contoso.Controllers
 
           return View(studentToUpdate);
         }
+
+        // GET: Students/Delete/5
+        public async Task<IActionResult> Delete(int? id, bool? saveChangesError = false)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var student = await _context.Students
+                .AsNoTracking()
+                .SingleOrDefaultAsync(m => m.Id == id);
+            if (student == null)
+            {
+                return NotFound();
+            }
+
+            if (saveChangesError.GetValueOrDefault())
+            {
+                ViewData["ErrorMessage"] =
+                    "No pudo apagar el almuno. Trate de nuevo";
+            }
+
+            return View(student);
+        }
+
+        // POST: Students/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+          var student = await _context.Students
+            .AsNoTracking()
+            .SingleOrDefaultAsync(m => m.Id == id);
+          
+          if (student == null) RedirectToAction(nameof(Index));
+
+          try
+          {
+            _context.Students.Remove(student);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+          }
+          catch (DbUpdateException /* ex */)
+          {
+            return RedirectToAction(nameof(Delete), new { id = id, saveChangesError = true });
+          }
+        }
   }
 }
