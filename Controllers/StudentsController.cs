@@ -69,16 +69,12 @@ namespace Contoso.Controllers
         // GET: Students/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var student = await _context.Students.SingleOrDefaultAsync(m => m.Id == id);
-            if (student == null)
-            {
-                return NotFound();
-            }
+
+            if (student == null) return NotFound();
+            
             return View(student);
         }
 
