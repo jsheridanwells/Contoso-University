@@ -36,5 +36,34 @@ namespace Contoso.Controllers
 
         return View(student);
       }
+
+      // GET: Students/Create
+        public IActionResult Create()
+        {
+          return View();
+        }
+
+      // POST: Student/Create
+      [HttpPost]
+      [ValidateAntiForgeryToken]
+      public async Task<IActionResult> Create(
+        [Bind("EnrollementDate,FirstMidName,LastName")] Student student
+      )
+      {
+        try
+        {
+          if (ModelState.IsValid)
+          {
+            _context.Add(student);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+          }
+        }
+        catch (DbUpdateException /* ex */)
+        {
+          ModelState.AddModelError("", "Problem creating student.");
+        }
+        return View(student);
+      }
   }
 }
