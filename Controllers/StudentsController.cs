@@ -12,10 +12,12 @@ namespace Contoso.Controllers
 {
     public class StudentsController : Controller
     {
+      // creates data object model
       private readonly SchoolContext _context;
       public StudentsController(SchoolContext context) => _context = context;
 
       // GET: Students
+      // accesses Students/index.html
       public async Task<IActionResult> Index()
       {
         return View(await _context.Students.ToListAsync());
@@ -79,14 +81,19 @@ namespace Contoso.Controllers
         }
 
         // POST: Students/Edit/5
+        // #Edit method is a post because HTML forms can only GET and POST
+        // in a Webapi app, this would be PUT/PATCH
         [HttpPost, ActionName("Edit")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditPost(int? id)
         {
           if (id == null) return NotFound();
 
+          // #SingleOrDefault will return an exception if more than one entry is returned matching id
           var studentToUpdate = await _context.Students.SingleOrDefaultAsync(s => s.Id == id);
 
+          // #TryUpdateModelAsync will only update values provides
+          // in the lambda, not the entire model.
           if (await TryUpdateModelAsync<Student>(
             studentToUpdate,
             "",
@@ -118,8 +125,8 @@ namespace Contoso.Controllers
             }
 
             var student = await _context.Students
-                .AsNoTracking()
-                .SingleOrDefaultAsync(m => m.Id == id);
+                .AsNoTracking() . // #AsNoTracking is for read-only queries, pulls result of query w/o storing state, more performant
+                .SingleOrDefaultAsync(m => m.Id == id);  // the actual #Delete will be done in a separate call
             if (student == null)
             {
                 return NotFound();
