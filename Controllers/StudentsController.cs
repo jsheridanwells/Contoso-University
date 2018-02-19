@@ -18,9 +18,29 @@ namespace Contoso.Controllers
 
       // GET: Students
       // accesses Students/index.html
-      public async Task<IActionResult> Index()
+      public async Task<IActionResult> Index(string sortOrder)
       {
-        return View(await _context.Students.ToListAsync());
+        ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+        ViewData["DateSortParm"] = sortOrder == "Date" ? "date_desc" : "Date";
+        var students = from s in _context.Students
+                        select s;
+        
+        switch (sortOrder)
+        {
+          case "name_desc":
+            students = students.OrderByDescending(s => s.LastName);
+            break;
+          case "Date":
+            students = students.OrderBy(s => s.EnrollmentDate);
+            break;
+          case "date_desc":
+            students = students.OrderByDescending(s => s.EnrollmentDate);
+            break;
+          default:
+            students = students.OrderBy(s => s.LastName);
+            break;            
+        }
+        return View(await students.AsNoTracking().ToListAsync());
       }
 
       // GET: Students/Details/5
