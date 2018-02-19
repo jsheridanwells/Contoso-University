@@ -125,7 +125,7 @@ namespace Contoso.Controllers
             }
 
             var student = await _context.Students
-                .AsNoTracking() . // #AsNoTracking is for read-only queries, pulls result of query w/o storing state, more performant
+                .AsNoTracking() // #AsNoTracking is for read-only queries, pulls result of query w/o storing state, more performant
                 .SingleOrDefaultAsync(m => m.Id == id);  // the actual #Delete will be done in a separate call
             if (student == null)
             {
